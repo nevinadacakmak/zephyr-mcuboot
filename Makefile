@@ -30,8 +30,14 @@ ALIGN           := 8
 # both versions are explicit and controllable - whichever is higher wins
 # on the next reset. Flip which one you want to run by bumping its number
 # above the other and reflashing that slot.
+#
+# V1 is set higher than V0 on purpose: this makes utat-mcuboot-v2 the
+# "candidate" image MCUboot will pick on the next reset after flash-v1.
+# Since v2's main.c deliberately never confirms itself, this sets up the
+# direct-xip-with-revert test: it boots once as an unconfirmed candidate,
+# then gets reverted back to v0 on the reset *after* that.
 V0_VERSION      := 3.0.0
-V1_VERSION      := 2.0.0
+V1_VERSION      := 4.0.0
 
 SERIAL_PORT := /dev/cu.usbmodem1403
 BAUD        := 115200

@@ -39,15 +39,15 @@ int main(void)
 	}
 
 
-	/* MCUboot: confirm and request an upgrade so the other slot runs next reset */
+	/* MCUboot: confirm ourselves so we stay eligible after this boot.
+	 * boot_request_upgrade() is a swap-mode API and has no effect under
+	 * direct-xip (slot selection there is purely by image version), so
+	 * it's intentionally not called here.
+	 */
 	#ifdef CONFIG_BOOTLOADER_MCUBOOT
-	/* Confirm ourselves so MCUboot doesn't revert us on a later reset */
 	if (!boot_is_img_confirmed()) {
 		boot_write_img_confirmed();
 	}
-
-	/* Arm a permanent swap so the other image runs after the next reset */
-	boot_request_upgrade(BOOT_UPGRADE_PERMANENT);
 	#endif
 
 	while (1) {

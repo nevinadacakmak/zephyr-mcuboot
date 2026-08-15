@@ -39,16 +39,21 @@ int main(void)
 	}
 
 
-	/* MCUboot: confirm and request an upgrade so the other slot runs next reset */
-	#ifdef CONFIG_BOOTLOADER_MCUBOOT
-	/* Confirm ourselves so MCUboot doesn't revert us on a later reset */
-	if (!boot_is_img_confirmed()) {
-		boot_write_img_confirmed();
-	}
-
-	/* Arm a permanent swap so the other image runs after the next reset */
-	boot_request_upgrade(BOOT_UPGRADE_PERMANENT);
-	#endif
+	/* MCUboot: deliberately NOT confirming here.
+	 *
+	 * This image is the "candidate" for direct-xip-with-revert testing:
+	 * it's meant to boot once as an unconfirmed test image (because its
+	 * VERSION is higher than utat-mcuboot's), and get reverted by
+	 * MCUboot on the *next* reset since it never confirms itself.
+	 *
+	 * To make this image "stick" instead (simulate a successful update),
+	 * temporarily add:
+	 *     if (!boot_is_img_confirmed()) { boot_write_img_confirmed(); }
+	 *
+	 * boot_request_upgrade() is intentionally not called anywhere in this
+	 * project: it's a swap-mode API and does nothing under direct-xip,
+	 * where slot selection is purely by image version.
+	 */
 
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);
