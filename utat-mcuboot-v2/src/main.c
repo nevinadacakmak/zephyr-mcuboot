@@ -7,6 +7,10 @@
 #include <stdio.h>
 #include <zephyr/kernel.h>
 #include <zephyr/drivers/gpio.h>
+#ifdef CONFIG_BOOTLOADER_MCUBOOT
+#include <zephyr/dfu/mcuboot.h>
+#include <zephyr/sys/reboot.h>
+#endif
 
 /* 1000 msec = 1 sec */
 #define SLEEP_TIME_MS   100
@@ -33,6 +37,18 @@ int main(void)
 	if (ret < 0) {
 		return 0;
 	}
+
+
+	/* MCUboot: confirm and request an upgrade so the other slot runs next reset */
+	#ifdef CONFIG_BOOTLOADER_MCUBOOT
+	/* Confirm ourselves so MCUboot doesn't revert us on a later reset */
+	if (!boot_is_img_confirmed()) {
+		boot_write_img_confirmed();
+	}
+
+	/* Arm a permanent swap so the other image runs after the next reset */
+	boot_request_upgrade(BOOT_UPGRADE_PERMANENT);
+	#endif
 
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);

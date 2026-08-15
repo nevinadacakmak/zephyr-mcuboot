@@ -210,7 +210,7 @@ Signing is active by default (RSA-2048), using MCUboot's bundled example key:
 bootloader/mcuboot/root-rsa-2048.pem
 ```
 
-This is fine for development, but this key is public in the MCUboot repo —
+This is fine for development, but this key is public in the MCUboot repo,
 **not suitable for anything deployed**. A project-specific keypair should be
 generated before any real use (see the
 [MCUboot docs](https://docs.mcuboot.com/readme-zephyr.html) section on
@@ -276,12 +276,12 @@ swapping again, a fresh image needs to be signed and reflashed into slot1.
 
 ## 10. Known limitations / not yet done
 
-- **No permanent confirm** — the running v1 image never calls MCUboot's
+- **No permanent confirm**: the running v1 image never calls MCUboot's
   confirm API (e.g. `boot_write_img_confirmed()`), so every swap is
   currently a one-shot test that reverts on the next reset by design.
-- **Example signing key** — see Signing section above.
-- **Manual flashing only** — slot1 images are flashed via debugger
+- **Example signing key**: see Signing section above.
+- **Manual flashing only**: slot1 images are flashed via debugger
   (STM32CubeProgrammer), not a real update mechanism (serial/DFU/MCUmgr).
-- **pyocd unsupported for this chip** — pyocd's bundled CMSIS pack index has
+- **pyocd unsupported for this chip**: pyocd's bundled CMSIS pack index has
   no entry for STM32L496 at time of writing; STM32CubeProgrammer is used
   instead for all flashing.
