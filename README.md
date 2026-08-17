@@ -1,4 +1,4 @@
-# MCUboot on Nucleo L496ZG — A/B Firmware Swap via Reset
+# MCUboot on Nucleo L496ZG: A/B Firmware Swap via Reset
 
 Implementation notes for running MCUboot with Zephyr on the STM32L496ZG-NUCLEO,
 with a working A/B firmware toggle: pressing the physical reset button alone
@@ -9,7 +9,7 @@ References:
 - [Building and using MCUboot with Zephyr](https://docs.mcuboot.com/readme-zephyr.html)
 - [MCUBoot Implementation Guide (UTAT)](https://git.janel.la/jjanella/mcuboot-guide-utat)
 
-## 1. Repo scope — what's actually pushed here
+## 1. Repo scope: what's actually pushed here
 
 This repo is the `zephyr-mcuboot/` folder, containing the `utat-mcuboot/`
 and `utat-mcuboot-v2/` app folders, the Makefile, and this README. It does
