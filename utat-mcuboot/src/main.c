@@ -38,16 +38,15 @@ int main(void)
 		return 0;
 	}
 
+	printf("APP: utat-mcuboot (v0, 1000ms)\n");
 
-	/* MCUboot: confirm ourselves so we stay eligible after this boot.
-	 * boot_request_upgrade() is a swap-mode API and has no effect under
-	 * direct-xip (slot selection there is purely by image version), so
-	 * it's intentionally not called here.
-	 */
 	#ifdef CONFIG_BOOTLOADER_MCUBOOT
+	/* swap-using-move: confirm ourselves so we don't get reverted, then
+	 * arm a permanent swap to the OTHER slot for the next reset. */
 	if (!boot_is_img_confirmed()) {
 		boot_write_img_confirmed();
 	}
+	boot_request_upgrade(BOOT_UPGRADE_PERMANENT);
 	#endif
 
 	while (1) {

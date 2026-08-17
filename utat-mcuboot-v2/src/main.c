@@ -13,7 +13,7 @@
 #endif
 
 /* 1000 msec = 1 sec */
-#define SLEEP_TIME_MS   100
+#define SLEEP_TIME_MS   300
 
 /* The devicetree node identifier for the "led0" alias. */
 #define LED0_NODE DT_ALIAS(led0)
@@ -38,22 +38,16 @@ int main(void)
 		return 0;
 	}
 
+	printf("APP: utat-mcuboot-v2 (v2, 300ms)\n");
 
-	/* MCUboot: deliberately NOT confirming here.
-	 *
-	 * This image is the "candidate" for direct-xip-with-revert testing:
-	 * it's meant to boot once as an unconfirmed test image (because its
-	 * VERSION is higher than utat-mcuboot's), and get reverted by
-	 * MCUboot on the *next* reset since it never confirms itself.
-	 *
-	 * To make this image "stick" instead (simulate a successful update),
-	 * temporarily add:
-	 *     if (!boot_is_img_confirmed()) { boot_write_img_confirmed(); }
-	 *
-	 * boot_request_upgrade() is intentionally not called anywhere in this
-	 * project: it's a swap-mode API and does nothing under direct-xip,
-	 * where slot selection is purely by image version.
-	 */
+	#ifdef CONFIG_BOOTLOADER_MCUBOOT
+	/* swap-using-move: confirm ourselves so we don't get reverted, then
+	 * arm a permanent swap to the OTHER slot for the next reset. */
+	if (!boot_is_img_confirmed()) {
+		boot_write_img_confirmed();
+	}
+	boot_request_upgrade(BOOT_UPGRADE_PERMANENT);
+	#endif
 
 	while (1) {
 		ret = gpio_pin_toggle_dt(&led);
